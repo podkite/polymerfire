@@ -283,10 +283,12 @@ if (typeof Polymer === 'undefined') {
       }
 
       _firestoreAssignCollection(name, snap) {
-        const propertyValueIsArray = Array.isArray(this[name])
-        const allDocumentsChanged = snap.docs.length === snap.docChanges.length;
+        const propertyValueIsArray = Array.isArray(this[name]);
+        const docChanges = snap.docChanges();
+
+        const allDocumentsChanged = snap.docs.length === docChanges.length;
         if (propertyValueIsArray && allDocumentsChanged === false) {
-          snap.docChanges.forEach((change) => {
+          docChanges.forEach((change) => {
             switch (change.type) {
               case 'added':
                 this.splice(name, change.newIndex, 0, iDoc(change.doc));
